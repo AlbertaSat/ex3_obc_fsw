@@ -28,7 +28,7 @@ pub struct Msg {
 
 impl Msg {
     // Constructor to create message header with correct length
-    fn new(msg_id: u8, dest_id: u8, source_id: u8, opcode: u8, data: Vec<u8>) -> Self {
+    pub fn new(msg_id: u8, dest_id: u8, source_id: u8, opcode: u8, data: Vec<u8>) -> Self {
         let len = data.len() as u8;
         let header = MsgHeader {
             msg_len: len + 5, //5 bytes for header fields
