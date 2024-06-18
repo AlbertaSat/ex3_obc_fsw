@@ -47,6 +47,6 @@ Below is the current format for how we will pass data through the OBC. It is sub
 
 | Byte 0 | Byte 1 | Byte 2 | Byte 3 | Byte 4 | Byte 5 | Byte 6 | Byte 127 |
 | :----: | :----: | :----: | :----: | :----: | :----: | :----: | :----: |
-| Length | MsgID  | DestID | SrcID  | Opcode | Data 0 | Data 1 | ... 0 |
+| Length | MsgID  | DestID | SrcID  | Opcode | Data 0 | Data 1 | ... Data 122 |
 
 The message as a whole is 128 bytes long and everything that comes after the Opcode is a vector of bytes.
