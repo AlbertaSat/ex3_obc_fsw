@@ -10,3 +10,14 @@ pub mod ports {
     pub const SUBSYSTEM_MONITOR_DISPATCHER_PORT: u16 = 1902;
     pub const BULK_MSG_HANDLER_DISPATCHER_PORT: u16 = 1903;
 }
+
+pub mod dest_ids {
+    pub const OBC: u8 = 0;
+    pub const EPS: u8 = 1;
+    pub const ADCS: u8 = 2;
+    pub const DFGM: u8 = 3;
+    pub const IRIS: u8 = 4;
+    pub const GPS: u8 = 5;
+    pub const DEPLOYABLES: u8 = 6;
+    pub const GROUND_STATION: u8 = 7;
+}
