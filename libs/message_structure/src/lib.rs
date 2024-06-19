@@ -15,7 +15,7 @@ use std::io::{Cursor, Error as IoError};
 /// This message header is shared by all message types
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MsgHeader {
-    pub msg_len: u8,   // This is the length of the whole message (header + body) in bytes
+    pub msg_len: u16,   // This is the length of the whole message (header + body) in bytes
     pub msg_id: u8,    // This is a unique identifier for each message sent by the GS
     pub dest_id: u8, //The message dispatcher uses this to determine which destination to send this message
     pub source_id: u8, // Identifies what sent the message for logging/debugging
@@ -31,7 +31,7 @@ pub struct Msg {
 impl Msg {
     // Constructor to create message header with correct length
     pub fn new(msg_id: u8, dest_id: u8, source_id: u8, opcode: u8, data: Vec<u8>) -> Self {
-        let len = data.len() as u8;
+        let len = data.len() as u16;
         let header = MsgHeader {
             msg_len: len + 5, //5 bytes for header fields
             msg_id: msg_id,
