@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "handlers/handler",
+    "handlers/coms_handler",
     "libs/interfaces",
     "message_dispatcher",
     "libs/message_structure",
