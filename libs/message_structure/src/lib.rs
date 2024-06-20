@@ -9,6 +9,7 @@ References:
 */
 use serde::Deserialize;
 use serde::Serialize;
+use std::io::Cursor;
 
 /// This message header is shared by all message types
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -44,6 +45,17 @@ impl Msg {
     }
 }
 
+pub fn serialize_msg(msg: Msg) -> Vec<u8> {
+    let mut buf = Vec::new();
+    let _serialized_msg = serde_json::to_writer(&mut buf, &msg).unwrap();
+    buf
+}
+
+pub fn deserialize_msg(serialized_msg: Vec<u8>) -> Msg {
+    let mut cursor = Cursor::new(serialized_msg);
+    serde_json::from_reader(&mut cursor).unwrap()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -54,15 +66,14 @@ mod tests {
     fn test_msg_serdes() {
         // Why does the serialization also take the commas??
         let msg = Msg::new(0, 2, 3, 4, vec![0, 1, 2, 3, 4, 5, 6]);
-        let mut buf = Vec::new();
-        let _serialized_msg = serde_json::to_writer(&mut buf, &msg).unwrap();
-        println!("Serialized Msg: {:?}", buf);
 
-        let mut cursor = Cursor::new(buf);
-        let deserialized_msg: Msg = serde_json::from_reader(&mut cursor).unwrap();
+        let serialized_msg = serialize_msg(msg);
+        println!("Serde Msg: {:?}", serialized_msg);
+
+        let deserialized_msg = deserialize_msg(serialized_msg);
 
         println!("Deserialized Msg: {:?}", deserialized_msg);
-        assert_eq!(deserialized_msg.header.msg_len, msg.header.msg_len);
-        assert_eq!(deserialized_msg.msg_body, msg.msg_body);
+        assert_eq!(deserialized_msg.header.msg_len, 12);
+        assert_eq!(deserialized_msg.msg_body, vec![0, 1, 2, 3, 4, 5, 6]);
     }
 }
