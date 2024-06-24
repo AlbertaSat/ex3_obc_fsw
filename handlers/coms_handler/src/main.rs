@@ -3,16 +3,18 @@
     and send it to the scheduler or directly to the Command Dispatcher accordingly.
 */
 
-use interfaces::{self, TcpInterface};
+use interfaces::{self, TcpInterface, TCP_BUFFER_SIZE};
 use std::sync::mpsc;
 use message_structure::*;
 use common::dest_ids::*;
 
 fn main() -> Result<(), &'static str> {
     let tcp_interface = start_handler().unwrap();
-    let (coms_handler_tx, coms_handler_rx) = mpsc::channel();
+    let (coms_handler_reader_tx, coms_handler_reader_rx) = mpsc::channel();
+    interfaces::async_read(tcp_interface.clone(), coms_handler_reader_tx, TCP_BUFFER_SIZE);
+
     let mut curr_msg = Msg::new(0,0,0,0,vec![]);
-    if let Ok(buffer) = coms_handler_rx.recv() {
+    if let Ok(buffer) = coms_handler_reader_rx.recv() {
         curr_msg = deserialize_msg(buffer).unwrap();
     } else {
         return Err("Cannot read Message");
@@ -55,9 +57,4 @@ fn start_handler() -> Result<TcpInterface, std::io::Error> {
     let ip: String = "127.0.0.1".to_string();
     let port: u16 = 8080;
     interfaces::TcpInterface::new_server(ip,port)
-
-    // let (coms_handler_tx, coms_handler_rx) = mpsc::channel();
-
-    // interfaces::async_read(tcp_interface.clone(), coms_handler_tx);
-
 }
